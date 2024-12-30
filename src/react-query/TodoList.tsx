@@ -5,6 +5,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import todosService, { Todo } from "./services/todosService";
 import { CACHE_KEY_TODOS } from "./const";
 import { FiEdit2 } from "react-icons/fi";
+import useUpdateTodo from "./hooks/useUpdateTodo";
+import useDeleteTodo from "./hooks/useDeleteTodo";
 
 
 const TodoList = () => {
@@ -32,24 +34,12 @@ interface Item {
 
 function Item({ todo }: Item) {
 	const [ isEditing, setIsEditing ] = React.useState(false);
-	const queryClient = useQueryClient();
-	const mutation = useMutation<Todo, Error, Todo>({
-		mutationFn: (todo) => todosService.delete(todo.id),
-		onSuccess: () => {
-			// Invalidate queries to refresh data after deletion
-			queryClient.invalidateQueries({ queryKey: CACHE_KEY_TODOS }).then(() => {
-				console.log('deleted successfully')
-			});
-		},
-		onError: (error) => {
-			console.error("Deletion failed:", error);
-		},
-	});
+	const deleteTodo = useDeleteTodo();
 	const handleEdit = () => {
 		setIsEditing(prevState => !prevState);
 	};
 	const handleDelete = () => {
-		mutation.mutate(todo);
+		deleteTodo.mutate(todo);
 	};
 	return (
 		<li key={todo.id} className="list-group-item">
@@ -70,26 +60,14 @@ function Item({ todo }: Item) {
 function EditableInput({ data }: { data: Todo }) {
 	const [ value, setValue ] = useState(data.title);
 	const [timer, setTimer] = useState(0);
-	const queryClient = useQueryClient();
-	const mutation = useMutation<Todo, Error, Todo>({
-		mutationFn: (data) => todosService.put(data.id, data),
-		onSuccess: () => {
-			// Invalidate queries to refresh data after deletion
-			queryClient.invalidateQueries({ queryKey: CACHE_KEY_TODOS }).then(() => {
-				console.log('updated successfully')
-			});
-		},
-		onError: (error) => {
-			console.error("updated failed:", error);
-		},
-	});
+	const updateTodo = useUpdateTodo();
 	const handleUpdate = (e: React.ChangeEvent<HTMLInputElement>) => {
 		// Update the input value
 		setValue(e.target.value);
 		// Debounce the input to avoid multiple requests
 		clearTimeout(timer);
 		setTimer(setTimeout(() => {
-			mutation.mutate({ ...data, title: e.target.value });
+			updateTodo.mutate({ ...data, title: e.target.value });
 		}, 1000));
 	};
 	useEffect(() => {
