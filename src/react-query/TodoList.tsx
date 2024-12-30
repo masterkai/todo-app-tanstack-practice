@@ -1,8 +1,8 @@
 import React from 'react';
-import useTodos, { Todo } from "./hooks/useToddos";
+import useTodos from "./hooks/useTodos";
 import { MdDeleteForever } from "react-icons/md";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import todosService from "./services/todosService";
+import todosService, { Todo } from "./services/todosService";
 import { CACHE_KEY_TODOS } from "./const";
 
 
