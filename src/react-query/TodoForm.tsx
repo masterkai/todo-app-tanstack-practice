@@ -15,7 +15,7 @@ const TodoForm = () => {
 			<form onSubmit={(event) => {
 				event.preventDefault();
 				if (ref.current && ref.current.value) {
-					addTodo.mutate({ id: uuidv4(), title: ref.current.value, completed: false })
+					addTodo.mutate({ id: uuidv4(), title: ref.current.value, isComplete: false })
 				}
 			}} className="row mb-3">
 				<div className="col">

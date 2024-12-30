@@ -2,7 +2,7 @@ import APIClient from "./api-client";
 export interface Todo {
 	id: string;
 	title: string;
-	completed: boolean;
+	isComplete: boolean;
 }
 const todosService =  new APIClient<Todo>('TodoItems');
 

@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useTodos from "./hooks/useTodos";
 import { MdDeleteForever } from "react-icons/md";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import todosService, { Todo } from "./services/todosService";
-import { CACHE_KEY_TODOS } from "./const";
+import { Todo } from "./services/todosService";
 import { FiEdit2 } from "react-icons/fi";
 import useUpdateTodo from "./hooks/useUpdateTodo";
 import useDeleteTodo from "./hooks/useDeleteTodo";
@@ -35,17 +33,21 @@ interface Item {
 function Item({ todo }: Item) {
 	const [ isEditing, setIsEditing ] = React.useState(false);
 	const deleteTodo = useDeleteTodo();
+	const updateTodo = useUpdateTodo();
 	const handleEdit = () => {
 		setIsEditing(prevState => !prevState);
 	};
 	const handleDelete = () => {
 		deleteTodo.mutate(todo);
 	};
+	const handleUpdate = () => {
+		updateTodo.mutate({ ...todo, isComplete: !todo.isComplete });
+	};
 	return (
 		<li key={todo.id} className="list-group-item">
 			<div className="d-flex justify-content-between align-content-center">
 				{
-					isEditing ? <EditableInput data={todo}/> : <span>{todo.title}</span>
+					isEditing ? <EditableInput data={todo}/> : <span onClick={handleUpdate} style={{ cursor: 'pointer', textDecoration: todo.isComplete ? 'line-through' : 'none' }}>{todo.title}</span>
 				}
 				<div style={{ width: '60px', display: 'flex', justifyContent: 'space-between', paddingLeft: '12px' }}>
 					<span style={{ cursor: 'pointer' }} onClick={() => handleEdit()}><FiEdit2/></span>
