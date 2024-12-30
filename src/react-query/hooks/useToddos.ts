@@ -1,5 +1,7 @@
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import { CACHE_KEY_TODOS } from "../const";
+import todosService from "../services/todosService";
 
 export interface Todo {
 	id: string;
@@ -8,13 +10,10 @@ export interface Todo {
 }
 
 const useTodos = () => {
-	const fetchTodos = async () => {
-		const response = await axios.get<Todo[]>('https://localhost:7296/api/TodoItems');
-		return response.data;
-	};
+
 	return useQuery<Todo[], Error>({
-		queryKey: [ 'todos' ],
-		queryFn: fetchTodos,
+		queryKey: CACHE_KEY_TODOS,
+		queryFn: todosService.get,
 		staleTime: 10 * 1000
 	});
 }
