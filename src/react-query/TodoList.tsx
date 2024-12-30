@@ -50,7 +50,7 @@ function Item({ todo }: Item) {
 		<li key={todo.id} className="list-group-item">
 			<div className="d-flex justify-content-between align-content-center">
 				<span>{todo.title}</span>
-				<span onClick={() => handleDelete()}><MdDeleteForever/></span>
+				<span style={{cursor:'pointer'}} onClick={() => handleDelete()}><MdDeleteForever/></span>
 			</div>
 		</li>
 	);
